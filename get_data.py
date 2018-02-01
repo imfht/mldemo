@@ -13,7 +13,7 @@ logging.basicConfig()
 
 def sdu_get_detail_page(url='http://www.view.sdu.edu.cn/info/1003/99072.htm'):
     p_list = []
-    logging.critical('trying %s'%url)
+    logging.critical('trying %s' % url)
     try:
         resp = requests.get(url)
     except:
@@ -28,6 +28,7 @@ def sdu_get_detail_page(url='http://www.view.sdu.edu.cn/info/1003/99072.htm'):
             p_list.append(i)
     return '\n'.join(p_list)
 
+
 def sjtu_get_detail_page(url='http://news.sjtu.edu.cn/info/1002/1645175.htm'):
     p_list = []
     try:
@@ -41,6 +42,7 @@ def sjtu_get_detail_page(url='http://news.sjtu.edu.cn/info/1002/1645175.htm'):
         p_list.append(i.getText().strip())
     return ''.join(p_list)
 
+
 def sjtu_get_detail_url():
     url = 'http://news.sjtu.edu.cn/jdyw/{page_num}.htm'
     for page_num in range(326):
@@ -51,18 +53,19 @@ def sjtu_get_detail_url():
         resp.encoding = 'utf-8'
         soup = BeautifulSoup(resp.text, 'html5lib')
         links = soup.find_all(id=re.compile('line\d+_\d+'))
-        logging.critical('found %s links'%len(links))
+        logging.critical('found %s links' % len(links))
         for i in links:
             try:
                 found_url = i.find('a')['href']
             except:
                 logging.warning('no url found at %s' % url)
                 continue
-            result =sjtu_get_detail_page(urljoin(url, found_url))
+            result = sjtu_get_detail_page(urljoin('http://news.sjtu.edu.cn', found_url))
             f = open('./data/sjtu/{}'.format(uuid.uuid5(uuid.NAMESPACE_URL, found_url.encode('utf-8'))), 'w+')
             f.write(result.encode('utf-8'))
             f.flush()
             f.close()
+
 
 def sdu_get_detail_url():
     url = 'http://www.view.sdu.edu.cn/sdyw/{page_num}.htm'
@@ -74,7 +77,7 @@ def sdu_get_detail_url():
         resp.encoding = 'utf-8'
         soup = BeautifulSoup(resp.text, 'html5lib')
         links = soup.find_all(id=re.compile('line_u\d_\d?'))
-        logging.critical('found %s links'%len(links))
+        logging.critical('found %s links' % len(links))
         for i in links:
             try:
                 found_url = i.find('a')['href']
