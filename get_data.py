@@ -31,6 +31,7 @@ def sdu_get_detail_page(url='http://www.view.sdu.edu.cn/info/1003/99072.htm'):
 
 def sjtu_get_detail_page(url='http://news.sjtu.edu.cn/info/1002/1645175.htm'):
     p_list = []
+    print url
     try:
         resp = requests.get(url)
         resp.encoding = 'utf-8'
@@ -38,7 +39,7 @@ def sjtu_get_detail_page(url='http://news.sjtu.edu.cn/info/1002/1645175.htm'):
         logging.critical('can not reach site, maybe blocked')
         return None
     soup = BeautifulSoup(resp.text, 'html5lib')
-    for i in soup.find_all(class_=re.compile('vsbcontent_.*?')):
+    for i in soup.find_all(id=re.compile('vsb_content')):
         p_list.append(i.getText().strip())
     return ''.join(p_list)
 
@@ -60,7 +61,7 @@ def sjtu_get_detail_url():
             except:
                 logging.warning('no url found at %s' % url)
                 continue
-            result = sjtu_get_detail_page(urljoin('http://news.sjtu.edu.cn', found_url))
+            result = sjtu_get_detail_page(urljoin('http://news.sjtu.edu.cn', found_url.strip('../')))
             f = open('./data/sjtu/{}'.format(uuid.uuid5(uuid.NAMESPACE_URL, found_url.encode('utf-8'))), 'w+')
             f.write(result.encode('utf-8'))
             f.flush()
