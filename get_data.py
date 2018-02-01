@@ -44,7 +44,7 @@ def sdu_get_detail_url():
                 logging.warning('no url found at %s' % url)
                 continue
             result = sdu_get_detail_page(urljoin(url, found_url))
-            f = open('./data/{}'.format(uuid.uuid5(uuid.NAMESPACE_URL, found_url)), 'w+')
+            f = open('./data/sdu/{}'.format(uuid.uuid5(uuid.NAMESPACE_URL, found_url)), 'w+')
             f.write(result)
             f.flush()
             f.close()
